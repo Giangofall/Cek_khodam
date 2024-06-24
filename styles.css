@@ -1,0 +1,146 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    padding: 20px; /* Tambahkan padding untuk kenyamanan pada perangkat kecil */
+    box-sizing: border-box;
+}
+
+.container {
+    text-align: center;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    background-image: url('path/to/your/pattern.png'); /* Ganti dengan path pola latar belakang yang Anda inginkan */
+    background-size: cover;
+    box-sizing: border-box;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #343a40;
+    font-size: 2em;
+}
+
+input {
+    padding: 12px;
+    width: 100%; /* Ubah menjadi 100% untuk responsivitas */
+    margin-bottom: 20px;
+    border: 2px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #28a745;
+    outline: none;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #1e7e34;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+}
+
+.loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.result {
+    display: none;
+    text-align: center; /* Center the text and the image container */
+}
+
+#monsterName {
+    font-size: 1.2em;
+    color: #495057;
+}
+
+#monsterImage {
+    margin-top: 20px;
+    width: 100%; /* Menetapkan lebar gambar untuk responsivitas */
+    max-width: 200px; /* Tetapkan lebar maksimum */
+    height: auto; /* Tetapkan tinggi otomatis untuk menjaga rasio aspek */
+    object-fit: cover; /* Memastikan gambar mengisi kotak tanpa distorsi */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: block;
+    margin-left: auto;
+    margin-right: auto; /* Center the image */
+    opacity: 0; /* Awalnya tersembunyi */
+    animation: fadeIn 1s forwards; /* Animasi fade-in */
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em; /* Kurangi ukuran font pada layar kecil */
+    }
+
+    button {
+        padding: 10px 20px; /* Kurangi padding pada layar kecil */
+        font-size: 0.9em; /* Kurangi ukuran font pada layar kecil */
+    }
+
+    .container {
+        padding: 20px; /* Kurangi padding pada layar kecil */
+    }
+
+    #monsterName {
+        font-size: 1em; /* Kurangi ukuran font pada layar kecil */
+    }
+
+    #monsterImage {
+        max-width: 150px; /* Kurangi lebar maksimum pada layar kecil */
+    }
+}
