@@ -4,21 +4,481 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cek Khodam</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #9b59b6;
+            --accent-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            background-image: linear-gradient(135deg, rgba(142, 68, 173, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: var(--accent-color);
+            bottom: -8px;
+            left: 25%;
+            border-radius: 2px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(142, 68, 173, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+        }
+        
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top: 8px solid var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(142, 68, 173, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #monsterName {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        #monsterImage {
+            max-width: 90%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            margin: 0 auto;
+            display: block;
+            animation: slideIn 1s ease-out, glow 3s infinite alternate;
+            opacity: 1;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 10px rgba(142, 68, 173, 0.2);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(142, 68, 173, 0.6), 0 0 30px rgba(231, 76, 60, 0.3);
+            }
+        }
+        
+        .mystic-particles {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(142, 68, 173, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 3s linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        /* Added styles for magical effects */
+        .magical-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .magical-circle svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .magical-circle.active {
+            opacity: 0.2;
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Cek Khodam</h1>
-        <input type="text" id="nameInput" placeholder="Masukkan nama Anda">
+        <input type="text" id="nameInput" placeholder="Masukkan nama Anda" autocomplete="off">
         <button onclick="generateMonster()">Cek Khodam</button>
-        <div id="loading" class="loading-overlay" style="display:none;">
-            <div class="loading-spinner"></div>
-        </div>
         <div id="result" class="result" style="display:none;">
             <p id="monsterName"></p>
             <img id="monsterImage" src="" alt="Monster Image" style="display:none;">
         </div>
+        
+        <!-- Magical circle effect -->
+        <div class="magical-circle" id="magicalCircle">
+            <svg viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#8e44ad" stroke-width="1"/>
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#9b59b6" stroke-width="0.5"/>
+                <circle cx="100" cy="100" r="60" fill="none" stroke="#e74c3c" stroke-width="0.5"/>
+                <path d="M100,20 L100,180 M20,100 L180,100 M30,30 L170,170 M30,170 L170,30" stroke="#8e44ad" stroke-width="0.3"/>
+                <path d="M100,20 L150,100 L100,180 L50,100 Z" fill="none" stroke="#e74c3c" stroke-width="0.5"/>
+                <text x="100" y="65" text-anchor="middle" fill="#8e44ad" font-size="5">✧✦✧✦✧✦✧✦✧✦✧</text>
+                <text x="100" y="140" text-anchor="middle" fill="#8e44ad" font-size="5">✦✧✦✧✦✧✦✧✦✧✦</text>
+            </svg>
+        </div>
     </div>
-    <script src="script.js"></script>
+    
+    <div id="loading" class="loading-overlay" style="display:none;">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Add particle effects to make the interface more mystical
+        function createParticles() {
+            const container = document.querySelector('.container');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('mystic-particles');
+                
+                // Random position, size and delay
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.opacity = `${Math.random() * 0.6 + 0.2}`;
+                particle.style.animationDelay = `${Math.random() * 3}s`;
+                particle.style.animationDuration = `${Math.random() * 5 + 3}s`;
+                
+                // Random color
+                const colors = ['rgba(142, 68, 173, 0.6)', 'rgba(231, 76, 60, 0.6)', 'rgba(52, 152, 219, 0.6)'];
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Immediately create initial particles
+        createParticles();
+
+        // Recreate particles every 15 seconds to keep the effect going
+        setInterval(createParticles, 15000);
+        
+        // Sound effects
+        function playSound(type) {
+            // Create oscillator for magical sound effects
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            if (type === 'start') {
+                // Mystical start sound
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.3);
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } else if (type === 'result') {
+                // Result reveal sound
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.5);
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.8);
+            }
+        }
+        
+        // Complete monster data
+        const monsters = [
+            { name: 'Skibidi Toilet', photo: 'jpg/tl.jpg', description: 'Khodam misterius yang membawa keberuntungan dalam hal kebersihan dan kreativitas.' },
+            { name: 'Siluman Api', photo: 'jpg/sma.jpg', description: 'Membawa semangat dan energi yang berkobar dalam hidupmu.' },
+            { name: 'Siluman Air', photo: 'jpg/smi.jpg', description: 'Membawa ketenangan dan kemampuan adaptasi dalam menghadapi rintangan.' },
+            { name: 'Ulat Roko', photo: 'jpg/UR.png', description: 'Membawa transformasi dan perubahan besar dalam hidupmu.' },
+            { name: 'Pria Tampan', photo: 'jpg/ii.jpg', description: 'Membawa daya tarik dan karisma dalam interaksi sosialmu.' },
+            { name: 'Putri Salju', photo: 'jpg/ps.jpg', description: 'Membawa keindahan dan ketenangan dalam hidupmu.' },
+            { name: 'Putri Sampah', photo: 'jpg/pts.jpg', description: 'Mengajarkan nilai dalam hal-hal sederhana dan kemampuan mendaur ulang masalah.' },
+            { name: 'Setan Kepala 4', photo: 'jpg/st.jpg', description: 'Membawa kebijaksanaan dari berbagai sudut pandang.' },
+            { name: 'PESSI', photo: 'jpg/Messi.jpg', description: 'Membawa keahlian dan prestasi luar biasa dalam bidang yang kamu tekuni.' },
+            { name: 'Burger Hytam', photo: 'jpg/bg.jpg', description: 'Membawa kelezatan dan kepuasan dalam hidupmu.' },
+            { name: 'Ultraman', photo: 'jpg/UT.jpg', description: 'Membawa kekuatan dan keberanian untuk melindungi orang-orang di sekitarmu.' },
+            { name: 'Badut', photo: 'jpg/bd.jpg', description: 'Membawa keceriaan dan tawa dalam situasi sulit.' },
+            { name: 'Raja Iblis', photo: 'jpg/raja.jpg', description: 'Membawa kekuatan tersembunyi dan ketegasan dalam mengambil keputusan.' },
+            { name: 'Mobil Aneh', photo: 'jpg/MB.jpg', description: 'Membawa perjalanan dan petualangan unik dalam hidupmu.' },
+            { name: 'Raja Kelabu', photo: 'jpg/rk.jpg', description: 'Membawa keseimbangan dan kebijaksanaan dalam menghadapi ketidakpastian.' },
+            { name: 'Jalangkung', photo: 'jpg/jk.jpg', description: 'Membawa hubungan dengan alam gaib dan pesan-pesan misterius.' },
+            { name: 'Cacing Mati', photo: 'jpg/cm.jpg', description: 'Membawa kerendahan hati dan kemampuan bertahan dalam kesulitan.' },
+            { name: 'Manusia Tampan', photo: 'jpg/ii.jpg', description: 'Membawa pesona dan daya tarik dalam pergaulanmu.' },
+            { name: 'Penaldo', photo: 'jpg/CR.jpg', description: 'Membawa dedikasi, kerja keras dan ambisi dalam mencapai tujuan.' },
+            { name: 'Maling Kejam', photo: 'jpg/maling.jpg', description: 'Membawa ketajaman pikiran dan kecerdikan dalam menemukan peluang.' }
+        ];
+        
+        // Convert name to a deterministic index
+        function getMonsterIndex(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = ((hash << 5) - hash) + name.charCodeAt(i);
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            // Make sure it's positive and within array bounds
+            return Math.abs(hash) % monsters.length;
+        }
+
+        function generateMonster() {
+            const nameInput = document.getElementById('nameInput').value.trim();
+            const monsterNameElement = document.getElementById('monsterName');
+            const monsterImageElement = document.getElementById('monsterImage');
+            const loadingElement = document.getElementById('loading');
+            const resultElement = document.getElementById('result');
+            const magicalCircle = document.getElementById('magicalCircle');
+            
+            if (nameInput === '') {
+                alert('Silakan masukkan nama Anda.');
+                return;
+            }
+            
+            // Reset and hide result
+            resultElement.style.display = 'none';
+            monsterImageElement.style.display = 'none';
+            
+            // Activate the magical circle
+            magicalCircle.classList.add('active');
+            
+            // Play start sound
+            playSound('start');
+            
+            // Show loading
+            loadingElement.style.display = 'flex';
+            
+            // Create a deterministic result based on name
+            const monsterIndex = getMonsterIndex(nameInput);
+            const monster = monsters[monsterIndex];
+            
+            // Simulate processing time
+            setTimeout(() => {
+                // Hide loading
+                loadingElement.style.display = 'none';
+                
+                // Create a base64 image placeholder if the image path doesn't exist
+                // This makes the app work even without actual image files
+                const placeholderImage = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="%239b59b6"/><text x="50%" y="50%" font-family="Arial" font-size="24" fill="white" text-anchor="middle" dy=".3em">${monster.name}</text></svg>`;
+                
+                // Update result text
+                monsterNameElement.innerHTML = `<span class="pulse">Selamat!</span> Khodam Anda adalah: <strong>${monster.name}</strong><br><small>${monster.description}</small>`;
+                
+                // Try to load the actual image, fall back to placeholder
+                monsterImageElement.onerror = function() {
+                    this.src = placeholderImage;
+                    this.style.display = 'block';
+                };
+                
+                monsterImageElement.onload = function() {
+                    this.style.display = 'block';
+                    
+                    // Play result sound
+                    playSound('result');
+                    
+                    // Show result
+                    resultElement.style.display = 'block';
+                    
+                    // Remove magical circle after result is shown
+                    setTimeout(() => {
+                        magicalCircle.classList.remove('active');
+                    }, 2000);
+                };
+                
+                // Set image source (will trigger onload or onerror)
+                monsterImageElement.src = monster.photo;
+
+            }, 2000);
+        }
+        
+        // Allow pressing Enter key to submit
+        document.getElementById('nameInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                generateMonster();
+            }
+        });
+    </script>
 </body>
 </html>
